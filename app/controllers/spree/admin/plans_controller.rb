@@ -14,6 +14,7 @@ module Spree
 
       def create
         @plan = @recurring.plans.build(plan_params)
+        @recurring.set_api_key
         if @plan.save_and_manage_api
           flash[:notice] = 'Plan created successfully.'
           redirect_to edit_admin_recurring_plan_path(@recurring, @plan)
