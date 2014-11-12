@@ -27,7 +27,12 @@ module Spree
     end
 
     def find_subscription
-      render_status_ok unless @subscription = Spree::User.find_by(stripe_customer_id: event[:data][:object][:customer]).subscription
+      if ['customer.subscription.deleted', 'customer.subscription.created', 'customer.subscription.updated'].include?(event[:type])
+        @subscription = Spree::Subscription.find_by(stripe_subscription_id: event[:data][:object][:id])
+      elsif ['invoice.created', 'invoice.payment_succeeded', 'invoice.payment_failed'].include?(event[:type])
+        @subscription = Spree::Subscription.find_by(stripe_subscription_id: event[:data][:object][:subscription])
+      end
+      render_status_failure unless @subscription
     end
 
     def retrieve_api_event
@@ -43,11 +48,11 @@ module Spree
     end
 
     def render_status_ok
-      render text: '', status: 200
+      render text: '', status: 200 and return
     end
 
     def render_status_failure
-      render text: '', status: 403
+      render text: '', status: 403 and return
     end
   end
 end
