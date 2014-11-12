@@ -15,7 +15,4 @@ module BeforeEach
       alias_method_chain(method, :before)
     end
   end
-
-  def before_each
-  end
 end

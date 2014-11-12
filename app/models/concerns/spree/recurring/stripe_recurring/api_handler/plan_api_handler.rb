@@ -3,6 +3,8 @@ module Spree
     class StripeRecurring < Spree::Recurring
       module ApiHandler 
         module PlanApiHandler
+          include BeforeEach
+
           def create_plan(plan)
             raise_invalid_object_error(plan, Spree::Plan)
             Stripe::Plan.create(

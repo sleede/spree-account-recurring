@@ -3,6 +3,8 @@ module Spree
     class StripeRecurring < Spree::Recurring
       module ApiHandler
         module SubscriptionApiHandler
+          include BeforeEach
+
           def subscribe(subscription)
             raise_invalid_object_error(subscription, Spree::Subscription)
             customer = subscription.user.find_or_create_stripe_customer(subscription.card_token)

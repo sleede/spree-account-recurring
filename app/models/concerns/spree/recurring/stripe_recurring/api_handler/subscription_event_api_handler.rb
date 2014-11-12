@@ -3,6 +3,8 @@ module Spree
     class StripeRecurring < Spree::Recurring
       module ApiHandler
         module SubscriptionEventApiHandler
+          include BeforeEach
+
           def retrieve_event(event_id)
             begin
               Stripe::Event.retrieve(event_id)
